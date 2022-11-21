@@ -1,0 +1,28 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": [
+        "post"
+      ]
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    },
+    {
+      "type": "cosmosDB",
+      "direction": "out",
+      "name": "order",
+      "databaseName": "orders-db",
+      "collectionName": "orders",
+      "createIfNotExists": true,
+      "connectionStringSetting": "ordersdb_DOCUMENTDB",
+    }
+  ],
+  "scriptFile": "../dist/AddOrderWithBinding/index.js"
+}
