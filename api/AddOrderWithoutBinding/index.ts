@@ -14,40 +14,40 @@ import { CosmosDBService } from "../services/cosmosDBService";
  * @returns the added item in the response body and status 201. Or status 400 and an error mesage in body.message.
  */
 const httpTrigger: AzureFunction = async function (
-  context: Context,
-  req: HttpRequest
+    context: Context,
+    req: HttpRequest
 ): Promise<void> {
-  context.log.info("AddOrderWithBinding function processed a request.");
-  if (!req.body) {
-    context.log.warn("No body in request");
-    context.res = {
-      status: 400,
-      body: { message: "Invalid input" },
-    };
-    return;
-  }
+    context.log.info("AddOrderWithBinding function processed a request.");
+    if (!req.body) {
+        context.log.warn("No body in request");
+        context.res = {
+            status: 400,
+            body: { message: "Invalid input" },
+        };
+        return;
+    }
 
-  try {
-    const order = req.body as Order;
-    const cosmosService: CosmosDBService = new CosmosDBService();
-    const orderAddedID = await cosmosService.addOrder(order);
-    order._id = orderAddedID.insertedId;
-    context.log.info(`Order added with ID: ${order._id}`);
+    try {
+        const order = req.body as Order;
+        const cosmosService: CosmosDBService = new CosmosDBService();
+        const orderAddedID = await cosmosService.addOrder(order);
+        order._id = orderAddedID.insertedId;
+        context.log.info(`Order added with ID: ${order._id}`);
 
-    context.log.info(
-      `Order item ${order.itemName} with quantity ${order.quantity}.`
-    );
+        context.log.info(
+            `Order item ${order.itemName} with quantity ${order.quantity}.`
+        );
 
-    context.res = {
-      status: 201,
-      body: order,
-    };
-  } catch (error) {
-    context.res = {
-      status: 400,
-      body: { message: error.message },
-    };
-  }
+        context.res = {
+            status: 201,
+            body: order,
+        };
+    } catch (error) {
+        context.res = {
+            status: 400,
+            body: { message: error.message },
+        };
+    }
 };
 
 export default httpTrigger;

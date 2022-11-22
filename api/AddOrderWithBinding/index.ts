@@ -15,31 +15,35 @@ import { Order } from "../models/order";
  * @returns the added item in the response body and status 201. Or status 400 and an error mesage in body.message.
  */
 const httpTrigger: AzureFunction = async function (
-  context: Context,
-  req: HttpRequest
+    context: Context,
+    req: HttpRequest
 ): Promise<void> {
-  context.log.info("AddOrderWithBinding function processed a request.");
+    context.log.info("AddOrderWithBinding function processed a request.");
 
-  if (!req.body) {
-    context.log.warn("No body in request");
+    if (!req.body) {
+        context.log.warn("No body in request");
+        context.res = {
+            status: 400,
+            body: { message: "Invalid input" },
+        };
+        return;
+    }
+
+    context.log.info(
+        `Order item ${req.body.name} with quantity ${req.body.quantity}`
+    );
+
+    const order = req.body as Order;
+    context.bindings.order = JSON.stringify({
+        itemName: "Noodles",
+        quantity: 5,
+        price: 7,
+    });
+
     context.res = {
-        status: 400,
-        body: { message: "Invalid input" },
+        // status: 200, /* Defaults to 200 */
+        body: "responseMessage",
     };
-    return;
-  }
-  
-  context.log.info(`Order item ${req.body.name} with quantity ${req.body.quantity}`);
-  
-  
-  const order = req.body as Order;
-  context.bindings.order = JSON.stringify( { itemName: "Noodles", quantity: 5, price: 7});
-
-
-  context.res = {
-    // status: 200, /* Defaults to 200 */
-    body: "responseMessage",
-  };
 };
 
 export default httpTrigger;
